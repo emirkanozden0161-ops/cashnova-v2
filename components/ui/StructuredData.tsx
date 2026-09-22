@@ -6,16 +6,18 @@ import { faq } from '@/data/faq';
  * Ziyaretçi bunu görmez; arama sonuçlarında SSS'lerin çıkmasına yardım eder.
  */
 export default function StructuredData() {
-  const business = {
+  /* Yalnızca doldurulmuş iletişim bilgileri eklenir. */
+  const business: Record<string, unknown> = {
     '@context': 'https://schema.org',
     '@type': 'LocalBusiness',
     name: siteConfig.brand,
     description: siteConfig.description,
     url: siteConfig.url,
-    ...(siteConfig.contact.email && { email: siteConfig.contact.email }),
-    ...(siteConfig.contact.phone && { telephone: siteConfig.contact.phone }),
-    ...(siteConfig.contact.instagram && { sameAs: [siteConfig.contact.instagram] }),
   };
+
+  if (siteConfig.contact.email) business.email = siteConfig.contact.email;
+  if (siteConfig.contact.phone) business.telephone = siteConfig.contact.phone;
+  if (siteConfig.contact.instagram) business.sameAs = [siteConfig.contact.instagram];
 
   const faqSchema = {
     '@context': 'https://schema.org',

@@ -15,13 +15,43 @@
    Örnek: 0532 111 22 33  →  '905321112233'
    Bu numara sitedeki bütün WhatsApp butonlarını besler;
    başka hiçbir dosyada numara yazılı değildir.             */
-export const WHATSAPP_NUMBER = '905385174890'; // [GERÇEK WHATSAPP NUMARASI]
+export const WHATSAPP_NUMBER: string = '905385174890'; // [GERÇEK WHATSAPP NUMARASI]
 
 /* Butonlara basıldığında WhatsApp'a düşen varsayılan mesaj. */
-export const WHATSAPP_MESSAGE =
+export const WHATSAPP_MESSAGE: string =
   'Merhaba, 3D baskı hizmetleriniz hakkında bilgi almak istiyorum.';
 
-export const siteConfig = {
+/* Not: Buradaki alanlar bilerek düz "metin" olarak tanımlıdır.
+   Boş bıraktığınız bir satırı sonradan doldurduğunuzda site
+   hiçbir uyarı vermeden çalışmaya devam eder. */
+type Contact = {
+  email: string;
+  instagram: string;
+  phone: string;
+  address: string;
+  hours: string;
+};
+
+type SiteConfigShape = {
+  brand: string;
+  title: string;
+  description: string;
+  url: string;
+  tagline: string;
+  contact: Contact;
+  hero: {
+    eyebrow: string;
+    titleLines: string[];
+    description: string;
+    primaryCta: string;
+    secondaryCta: string;
+    image: string;
+    imageAlt: string;
+  };
+  trustBar: { icon: string; label: string }[];
+};
+
+export const siteConfig: SiteConfigShape = {
   brand: 'Cashnova',
   /* Tarayıcı sekmesinde ve Google sonuçlarında görünür. */
   title: 'Cashnova | Profesyonel 3D Baskı ve Özel Üretim',
@@ -72,6 +102,6 @@ export const siteConfig = {
     { icon: 'bolt', label: 'Hızlı Üretim' },
     { icon: 'chat', label: "WhatsApp'tan Kolay Sipariş" },
   ],
-} as const;
+};
 
-export type SiteConfig = typeof siteConfig;
+export type SiteConfig = SiteConfigShape;

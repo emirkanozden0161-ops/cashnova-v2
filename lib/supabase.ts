@@ -8,11 +8,31 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
    data/ klasöründeki yedek içerikle çalışmaya devam eder.
    ============================================================ */
 
-const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim().replace(/^["']|["']$/g, '');
+const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim().replace(/^["']|["']$/g, '');
 
-/** Kurulum tamamlandı mı? */
-export const supabaseReady = Boolean(url && anonKey);
+/** Adres gerçekten https://... biçiminde mi? */
+function isValidUrl(value: string | undefined): boolean {
+  if (!value) return false;
+  try {
+    const parsed = new URL(value);
+    return parsed.protocol === 'https:' || parsed.protocol === 'http:';
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Kurulum tamamlandı mı?
+ *
+ * Adres yanlış yazılmışsa burada yakalanır ve site yedek içerikle
+ * çalışmaya devam eder. Yanlış bir satır yüzünden sitenin tamamının
+ * çökmesini engeller.
+ */
+export const supabaseReady = Boolean(isValidUrl(url) && anonKey);
+
+/** Adres yazılmış ama biçimi bozuksa true — panelde uyarı göstermek için */
+export const supabaseUrlBroken = Boolean(url && !isValidUrl(url));
 
 /** Fotoğrafların yüklendiği depo adı (schema.sql ile aynı olmalı) */
 export const BUCKET = 'gorseller';

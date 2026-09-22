@@ -1,7 +1,7 @@
 'use client';
 
 import { useCallback, useEffect, useState } from 'react';
-import { getBrowserClient, supabaseReady } from '@/lib/supabase';
+import { getBrowserClient, supabaseReady, supabaseUrlBroken } from '@/lib/supabase';
 import { siteConfig } from '@/data/siteConfig';
 import Logo from '@/components/ui/Logo';
 import ProductManager from './ProductManager';
@@ -86,16 +86,40 @@ export default function AdminApp() {
     return (
       <div className="mx-auto flex min-h-screen max-w-xl items-center px-5 py-16">
         <Card>
-          <h1 className="font-display text-[22px] font-semibold text-ink">Kurulum tamamlanmamış</h1>
-          <p className="mt-4 text-[14.5px] leading-relaxed text-muted">
-            Yönetim panelinin çalışması için veritabanı bağlantı bilgileri gerekiyor. Proje
-            klasöründeki <code className="rounded bg-ink/[0.06] px-1.5 py-0.5">.env.local</code>{' '}
-            dosyasına iki satırı eklemeniz yeterli.
-          </p>
-          <p className="mt-3 text-[13.5px] leading-relaxed text-muted">
-            Adımların tamamı <code className="rounded bg-ink/[0.06] px-1.5 py-0.5">KURULUM.md</code>{' '}
-            dosyasında anlatılıyor.
-          </p>
+          <h1 className="font-display text-[22px] font-semibold text-ink">
+            {supabaseUrlBroken ? 'Adres satırı hatalı yazılmış' : 'Kurulum tamamlanmamış'}
+          </h1>
+
+          {supabaseUrlBroken ? (
+            <>
+              <p className="mt-4 text-[14.5px] leading-relaxed text-muted">
+                <code className="rounded bg-ink/[0.06] px-1.5 py-0.5">.env.local</code> dosyasındaki{' '}
+                <code className="rounded bg-ink/[0.06] px-1.5 py-0.5">NEXT_PUBLIC_SUPABASE_URL</code>{' '}
+                satırı geçerli bir adres değil. Şu kalıpta olmalı:
+              </p>
+              <pre className="mt-3 overflow-x-auto rounded-xl bg-ink px-4 py-3 text-[12.5px] text-white">
+                https://projekodunuz.supabase.co
+              </pre>
+              <p className="mt-3 text-[13.5px] leading-relaxed text-muted">
+                Başında <code className="rounded bg-ink/[0.06] px-1.5 py-0.5">https://</code>,
+                sonunda <code className="rounded bg-ink/[0.06] px-1.5 py-0.5">.supabase.co</code>{' '}
+                olmalı; tırnak ve boşluk olmamalı. Düzelttikten sonra sunucuyu yeniden başlatın.
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="mt-4 text-[14.5px] leading-relaxed text-muted">
+                Yönetim panelinin çalışması için veritabanı bağlantı bilgileri gerekiyor. Proje
+                klasöründeki <code className="rounded bg-ink/[0.06] px-1.5 py-0.5">.env.local</code>{' '}
+                dosyasına iki satırı eklemeniz yeterli.
+              </p>
+              <p className="mt-3 text-[13.5px] leading-relaxed text-muted">
+                Adımların tamamı{' '}
+                <code className="rounded bg-ink/[0.06] px-1.5 py-0.5">KURULUM.md</code> dosyasında
+                anlatılıyor.
+              </p>
+            </>
+          )}
           <p className="mt-5 text-[13px] text-muted">
             Bu arada site çalışmaya devam ediyor; yedekteki ürünleri gösteriyor.
           </p>
